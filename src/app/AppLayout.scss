@@ -1,0 +1,12 @@
+@import "variables";
+
+.AppLayout {
+  margin: 0;
+  padding: 0;
+
+  h1 {
+    padding: $gap/2;
+    color: $bg-color;
+    background: $theme-color;
+  }
+}
