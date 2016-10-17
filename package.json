@@ -17,7 +17,9 @@
     "classnames": "^2.2.5",
     "normalize.css": "^4.1.1",
     "react": "^15.3.2",
-    "react-dom": "^15.3.2"
+    "react-dom": "^15.3.2",
+    "react-three-renderer": "^2.3.2",
+    "three": "^0.79.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.6",

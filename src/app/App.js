@@ -1,11 +1,12 @@
 import React from "react";
 
 import AppLayout from "./AppLayout";
+import World from "../world/World";
 
 export default function App (props) {
     return (
         <AppLayout>
-            <h1>Hello, React!</h1>
+            <World />
         </AppLayout>
     )
 }
