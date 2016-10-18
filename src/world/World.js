@@ -14,33 +14,67 @@ export default class World extends React.Component {
         cubeRotation: new THREE.Euler(0, 0, 0)
     };
 
-    onAnimate () {
-        const { state } = this;
+    renderer;
+    scene;
+    camera;
+    animationFrame;
 
-        this.setState({
+    componentDidMount () {
+
+        this.handleAnimate();
+
+    }
+
+    componentWillUnmount () {
+
+        cancelAnimationFrame(this.animationFrame);
+
+    }
+    
+    handleRendererUpdated (renderer) {
+        // note: this gets called before component did mount
+        this.renderer = renderer;
+    }
+
+    handleAnimate () {
+
+        this.animationFrame = requestAnimationFrame(() => this.handleAnimate());
+
+        this.setState((prevState) => ({
             cubeRotation: new THREE.Euler(
-                state.cubeRotation.x + 0.05,
-                state.cubeRotation.y + 0.05,
+                prevState.cubeRotation.x + 0.05,
+                prevState.cubeRotation.y + 0.05,
                 0
-            ),
-        });
+            )
+        }));
+
+        const { renderer, scene, camera } = this;
+
+        if (renderer && scene && camera) {
+            // possibly swap with effectcomposer
+            renderer.render(scene, camera);
+        }
     }
 
     render () {
+
+        const { state } = this;
         const width = window.innerWidth; // canvas width
         const height = window.innerHeight; // canvas height
         const aspect = width / height;
-        const { state } = this;
 
         return (
             <React3
-                mainCamera="camera" // this points to the perspectiveCamera which has the name set to "camera" below
+                mainCamera="camera" // this points to the perspectiveCamera named "camera" below
                 width={width}
                 height={height}
                 antialias={true}
-                onAnimate={() => this.onAnimate()}
+                //onAnimate={() => this.handleAnimate()}
+                onRendererUpdated={(renderer) => this.handleRendererUpdated(renderer)}
+                onManualRenderTriggerCreated={() => null}
+                forceManualRender={true}
             >
-                <scene>
+                <scene ref={(ref) => this.scene = ref}>
                     <ambientLight
                         color={0xffffff}
                         intensity={.5}
@@ -57,6 +91,7 @@ export default class World extends React.Component {
                         near={0.1}
                         far={1000}
                         position={state.cameraPosition}
+                        ref={(ref) => this.camera = ref}
                     />
                     <mesh rotation={state.cubeRotation}>
                         <boxGeometry
@@ -64,9 +99,7 @@ export default class World extends React.Component {
                             height={1}
                             depth={1}
                         />
-                        <meshLambertMaterial
-                            color={0x00ff00}
-                        />
+                        <meshLambertMaterial color={0x00ff00} />
                     </mesh>
                 </scene>
             </React3>
