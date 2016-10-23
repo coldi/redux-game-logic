@@ -1,6 +1,9 @@
 import React, {PropTypes} from "react";
 import THREE from 'three';
 import React3 from 'react-three-renderer';
+import TWEEN from 'tween.js';
+
+import Grid from './Grid';
 
 export default class World extends React.Component {
 
@@ -9,9 +12,17 @@ export default class World extends React.Component {
     static defaultProps = {};
 
     state = {
-        cameraPosition: new THREE.Vector3(0, 0, 5),
-        lightPosition: new THREE.Vector3(5, 5, 5),
-        cubeRotation: new THREE.Euler(0, 0, 0)
+        cameraPosition: [2, 2, 5],
+        cameraTarget: [2, 0, 0],
+        lightPosition: [5, 5, 5],
+        actors: [
+            [1, 1]
+        ],
+        map: [
+            [1, 1, 0, 1],
+            [0, 1, 1, 1],
+            [1, 1, 1, 1],
+        ]
     };
 
     renderer;
@@ -36,10 +47,11 @@ export default class World extends React.Component {
         this.renderer = renderer;
     }
 
-    handleAnimate () {
+    handleAnimate (time) {
 
-        this.animationFrame = requestAnimationFrame(() => this.handleAnimate());
+        this.animationFrame = requestAnimationFrame((t) => this.handleAnimate(t));
 
+        /*
         this.setState((prevState) => ({
             cubeRotation: new THREE.Euler(
                 prevState.cubeRotation.x + 0.05,
@@ -47,6 +59,9 @@ export default class World extends React.Component {
                 0
             )
         }));
+        */
+
+        TWEEN.update(time);
 
         const { renderer, scene, camera } = this;
 
@@ -75,35 +90,37 @@ export default class World extends React.Component {
                 forceManualRender={true}
             >
                 <scene ref={(ref) => this.scene = ref}>
+
                     <ambientLight
                         color={0xffffff}
                         intensity={.5}
                     />
-                    <pointLight
-                        color={0xffffff}
-                        intensity={.5}
-                        position={state.lightPosition}
-                    />
+
                     <perspectiveCamera
                         name="camera"
                         fov={75}
                         aspect={aspect}
                         near={0.1}
                         far={1000}
-                        position={state.cameraPosition}
+                        position={vectorFromArray(state.cameraPosition)}
+                        lookAt={vectorFromArray(state.cameraTarget)}
                         ref={(ref) => this.camera = ref}
-                    />
-                    <mesh rotation={state.cubeRotation}>
-                        <boxGeometry
-                            width={1}
-                            height={1}
-                            depth={1}
+                    >
+                        <pointLight
+                            color={0xffffff}
+                            intensity={.5}
+                            position={vectorFromArray(state.lightPosition)}
                         />
-                        <meshLambertMaterial color={0x00ff00} />
-                    </mesh>
+                    </perspectiveCamera>
+
+                    <Grid map={state.map} actors={state.actors} />
+
                 </scene>
             </React3>
         )
     }
-
 }
+
+
+const vectorFromArray = (arr) =>
+    new THREE.Vector3().fromArray(arr);

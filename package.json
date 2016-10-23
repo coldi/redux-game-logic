@@ -19,7 +19,8 @@
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-three-renderer": "^2.3.2",
-    "three": "^0.79.0"
+    "three": "^0.79.0",
+    "tween.js": "^16.3.5"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
