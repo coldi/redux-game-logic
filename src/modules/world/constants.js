@@ -1,0 +1,1 @@
+export const WORLD_ACTOR_MOVE = 'WORLD_ACTOR_MOVE';

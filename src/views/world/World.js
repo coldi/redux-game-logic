@@ -1,28 +1,21 @@
 import React, {PropTypes} from "react";
+import { connect } from "react-redux";
 import THREE from 'three';
 import React3 from 'react-three-renderer';
 import TWEEN from 'tween.js';
 
 import Grid from './Grid';
+import actorMove from '../../modules/world/actions/actorMove';
 
-export default class World extends React.Component {
+export class World extends React.Component {
 
     static propTypes = {};
 
-    static defaultProps = {};
-
-    state = {
-        cameraPosition: [2, 2, 5],
-        cameraTarget: [2, 0, 0],
-        lightPosition: [5, 5, 5],
-        actors: [
-            [1, 1]
-        ],
-        map: [
-            [1, 1, 0, 1],
-            [0, 1, 1, 1],
-            [1, 1, 1, 1],
-        ]
+    static defaultProps = {
+        map: [],
+        actors: {},
+        scene: {},
+        onMove: () => null
     };
 
     renderer;
@@ -33,6 +26,10 @@ export default class World extends React.Component {
     componentDidMount () {
 
         this.handleAnimate();
+
+        setTimeout(() => {
+            this.props.onMove([1, 1])
+        }, 600)
 
     }
 
@@ -51,16 +48,6 @@ export default class World extends React.Component {
 
         this.animationFrame = requestAnimationFrame((t) => this.handleAnimate(t));
 
-        /*
-        this.setState((prevState) => ({
-            cubeRotation: new THREE.Euler(
-                prevState.cubeRotation.x + 0.05,
-                prevState.cubeRotation.y + 0.05,
-                0
-            )
-        }));
-        */
-
         TWEEN.update(time);
 
         const { renderer, scene, camera } = this;
@@ -73,10 +60,12 @@ export default class World extends React.Component {
 
     render () {
 
-        const { state } = this;
+        const { props } = this;
         const width = window.innerWidth; // canvas width
         const height = window.innerHeight; // canvas height
         const aspect = width / height;
+
+        console.log('world render:', props.actors.player);
 
         return (
             <React3
@@ -102,24 +91,42 @@ export default class World extends React.Component {
                         aspect={aspect}
                         near={0.1}
                         far={1000}
-                        position={vectorFromArray(state.cameraPosition)}
-                        lookAt={vectorFromArray(state.cameraTarget)}
+                        position={vectorFromArray(props.scene.cameraPosition)}
+                        lookAt={vectorFromArray(props.scene.cameraTarget)}
                         ref={(ref) => this.camera = ref}
                     >
                         <pointLight
                             color={0xffffff}
                             intensity={.5}
-                            position={vectorFromArray(state.lightPosition)}
+                            position={vectorFromArray(props.scene.lightPosition)}
                         />
                     </perspectiveCamera>
 
-                    <Grid map={state.map} actors={state.actors} />
+                    <Grid map={props.map} player={props.actors.player} />
 
                 </scene>
             </React3>
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    const { map, actors, scene } = state;
+    return { map, actors, scene }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onMove: (offset) => dispatch(
+            actorMove('player', offset)
+        )
+    }
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(World);
 
 
 const vectorFromArray = (arr) =>

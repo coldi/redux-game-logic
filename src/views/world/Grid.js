@@ -8,11 +8,11 @@ import Figure from './Figure';
 
 const TILE_SIZE = 1;
 
-export default function Grid ({ map = [[]], actors = [] }) {
+export default function Grid ({ map = [[]], player = {} }) {
 
     const tiles = map.map((col, y) =>
         col.map((type, x) => (
-            <Tile key={`${x}_${y}`} gridX={x} gridY={y} tileSize={TILE_SIZE}>
+            <Tile key={`tl_${x}_${y}`} gridX={x} gridY={y} tileSize={TILE_SIZE}>
                 {(type > 0)
                     ? <Field />
                     : null}
@@ -20,6 +20,7 @@ export default function Grid ({ map = [[]], actors = [] }) {
         ))
     );
 
+    /*
     const moveables = actors.map(([x, y]) => {
         return (
             <Moveable key={`${x}_${y}`} gridX={x} gridY={y} tileSize={TILE_SIZE}>
@@ -27,6 +28,15 @@ export default function Grid ({ map = [[]], actors = [] }) {
             </Moveable>
         )
     });
+    */
+
+    console.log('grid render:', player);
+
+    const moveable = ({ id, offset }) => (
+        <Moveable key={`mv_${id}`} gridX={offset[0]} gridY={offset[1]} tileSize={TILE_SIZE}>
+            <Figure />
+        </Moveable>
+    );
 
     return (
         <object3D name="grid">
@@ -36,7 +46,7 @@ export default function Grid ({ map = [[]], actors = [] }) {
             </object3D>
 
             <object3D name="moveables">
-                {moveables}
+                {moveable(player)}
             </object3D>
 
         </object3D>
