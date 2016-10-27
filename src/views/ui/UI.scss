@@ -1,0 +1,15 @@
+@import "variables";
+
+
+.UI {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+
+.Controls {
+  width: 240px;
+  text-align: center;
+  color: #fff;
+}
