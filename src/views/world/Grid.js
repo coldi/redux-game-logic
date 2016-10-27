@@ -32,8 +32,8 @@ export default function Grid ({ map = [[]], player = {} }) {
 
     console.log('grid render:', player);
 
-    const moveable = ({ id, offset }) => (
-        <Moveable key={`mv_${id}`} gridX={offset[0]} gridY={offset[1]} tileSize={TILE_SIZE}>
+    const moveable = ({ id, coord }) => (
+        <Moveable key={`mv_${id}`} gridX={coord[0]} gridY={coord[1]} tileSize={TILE_SIZE}>
             <Figure />
         </Moveable>
     );
