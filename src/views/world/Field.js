@@ -1,17 +1,21 @@
 import React, {PropTypes} from "react";
 
-export default function Field ({}) {
+export default class Field extends React.PureComponent {
 
-    let color = 0x008800 * Math.random() + 0x008800;
+    render () {
 
-    return (
-        <mesh>
-            <boxGeometry
-                width={1}
-                height={.25}
-                depth={1}
-            />
-            <meshLambertMaterial color={color} />
-        </mesh>
-    )
+        let color = 0x008800 * Math.random() + 0x008800;
+
+        return (
+            <mesh>
+                <boxGeometry
+                    width={1}
+                    height={.25}
+                    depth={1}
+                />
+                <meshLambertMaterial color={color} />
+            </mesh>
+        )
+
+    }
 };
