@@ -8,7 +8,7 @@ import Figure from './Figure';
 
 const TILE_SIZE = 1;
 
-export default function Grid ({ map = [[]], player = {} }) {
+export default function Grid ({ map = [[]], actors = {} }) {
 
     const tiles = map.map((col, y) =>
         col.map((type, x) => (
@@ -20,23 +20,15 @@ export default function Grid ({ map = [[]], player = {} }) {
         ))
     );
 
-    /*
-    const moveables = actors.map(([x, y]) => {
+    const moveables = Object.keys(actors).map((id) => {
+        const actor = actors[id];
+        const [ x, y ] = actor.coord;
         return (
-            <Moveable key={`${x}_${y}`} gridX={x} gridY={y} tileSize={TILE_SIZE}>
-                <Figure />
+            <Moveable key={`mv_${id}`} gridX={x} gridY={y} tileSize={TILE_SIZE}>
+                <Figure color={actor.color} />
             </Moveable>
         )
     });
-    */
-
-    console.log('grid render:', player);
-
-    const moveable = ({ id, coord }) => (
-        <Moveable key={`mv_${id}`} gridX={coord[0]} gridY={coord[1]} tileSize={TILE_SIZE}>
-            <Figure />
-        </Moveable>
-    );
 
     return (
         <object3D name="grid">
@@ -46,7 +38,7 @@ export default function Grid ({ map = [[]], player = {} }) {
             </object3D>
 
             <object3D name="moveables">
-                {moveable(player)}
+                {moveables}
             </object3D>
 
         </object3D>

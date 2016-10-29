@@ -8,7 +8,12 @@ const actors = (
     state = { // assoc array
         'player': {
             id: 'player',
+            color: 0xff9900,
             coord: [1, 1]
+        },
+        'npc': {
+            id: 'npc',
+            coord: [0, 0]
         }
     },
     action = {}

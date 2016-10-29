@@ -1,9 +1,9 @@
 import React, {PropTypes} from "react";
 import THREE from 'three';
 
-export default function Figure ({}) {
+export default function Figure (props) {
 
-    const color = 0xcccccc;
+    const color = props.color || 0xcccccc;
     const position = new THREE.Vector3(0, .5, 0);
 
     return (
