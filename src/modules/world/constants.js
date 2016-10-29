@@ -1,1 +1,2 @@
 export const WORLD_ACTOR_MOVE = 'WORLD_ACTOR_MOVE';
+export const WINDOW_RESIZE = 'WINDOW_RESIZE';

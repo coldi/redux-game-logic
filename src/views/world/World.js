@@ -3,8 +3,10 @@ import { connect } from "react-redux";
 import THREE from 'three';
 import React3 from 'react-three-renderer';
 import TWEEN from 'tween.js';
+import { debounce } from 'lodash';
 
 import Grid from './Grid';
+import windowResize from '../../modules/world/actions/windowResize';
 import actorMove from '../../modules/world/actions/actorMove';
 
 export class World extends React.Component {
@@ -15,27 +17,42 @@ export class World extends React.Component {
         map: [],
         actors: {},
         scene: {},
-        onMove: () => null
+        onMove: () => null,
+        onResize: () => null,
     };
 
     renderer;
     scene;
     camera;
     animationFrame;
+    windowResizeProxy;
 
     componentDidMount () {
 
         this.handleAnimate();
 
-        setTimeout(() => {
-            this.props.onMove([1, 1])
-        }, 600)
+        this.windowResizeProxy = debounce((e) => this.props.onResize(e), 100);
+        window.addEventListener('resize', this.windowResizeProxy);
 
+        this.resize();
+
+    }
+
+    componentDidUpdate (nextProps) {
+
+        const { props } = this;
+
+        if (nextProps.scene.viewWidth !== props.scene.viewWidth ||
+            nextProps.scene.viewHeight !== props.scene.viewHeight) {
+            this.resize();
+        }
     }
 
     componentWillUnmount () {
 
         cancelAnimationFrame(this.animationFrame);
+
+        window.removeEventListener('resize', this.windowResizeProxy);
 
     }
     
@@ -48,6 +65,7 @@ export class World extends React.Component {
 
         this.animationFrame = requestAnimationFrame((t) => this.handleAnimate(t));
 
+        // TODO: later: move TWEEN.update() to a really global rAF loop
         TWEEN.update(time);
 
         const { renderer, scene, camera } = this;
@@ -58,20 +76,33 @@ export class World extends React.Component {
         }
     }
 
+    resize () {
+
+        const { scene } = this.props;
+
+        this.camera.aspect = scene.viewWidth / scene.viewHeight;
+
+        //let fov = scene.fov / this.camera.aspect;
+        //this.camera.fov = Math.min(fov, scene.fov);
+        this.camera.updateProjectionMatrix();
+
+        this.renderer.setSize(scene.viewWidth, scene.viewHeight);
+
+    }
+
     render () {
 
         const { props } = this;
-        const width = window.innerWidth; // canvas width
-        const height = window.innerHeight; // canvas height
+        const width = props.scene.viewWidth; // canvas width
+        const height = props.scene.viewHeight; // canvas height
         const aspect = width / height;
-
-        console.log('world render:', props.actors.player);
 
         return (
             <React3
                 mainCamera="camera" // this points to the perspectiveCamera named "camera" below
-                width={width}
-                height={height}
+                width={props.scene.viewWidth}
+                height={props.scene.viewHeight}
+                clearColor={0x444444}
                 antialias={true}
                 //onAnimate={() => this.handleAnimate()}
                 onRendererUpdated={(renderer) => this.handleRendererUpdated(renderer)}
@@ -102,7 +133,7 @@ export class World extends React.Component {
                         />
                     </perspectiveCamera>
 
-                    <Grid map={props.map} player={props.actors.player} />
+                    <Grid map={props.map} actors={props.actors} />
 
                 </scene>
             </React3>
@@ -119,6 +150,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onMove: (offset) => dispatch(
             actorMove('player', offset)
+        ),
+        onResize: (e) => dispatch(
+            windowResize(e.target.innerWidth, e.target.innerHeight)
         )
     }
 };
