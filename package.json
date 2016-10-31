@@ -23,6 +23,7 @@
     "react-three-renderer": "^2.3.2",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0",
+    "seamless-immutable": "^6.3.0",
     "three": "^0.79.0",
     "tween.js": "^16.3.5"
   },

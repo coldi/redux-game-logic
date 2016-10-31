@@ -1,11 +1,12 @@
 import { WORLD_ACTOR_MOVE } from '../constants';
 import { isEqual } from 'lodash';
+import Immutable from 'seamless-immutable';
 
 // TODO: later: rename actors to characters
 // TODO: remember: characters are part of a group!
 const actors = (
 
-    state = { // assoc array
+    state = Immutable({
         'player': {
             id: 'player',
             color: 0xff9900,
@@ -15,7 +16,7 @@ const actors = (
             id: 'npc',
             coord: [0, 0]
         }
-    },
+    }),
     action = {}
 
 ) => {
@@ -25,12 +26,10 @@ const actors = (
 
         case WORLD_ACTOR_MOVE:
             const { id, offset } = action.payload;
-            // better use some immutable tools here
-            const actor = { ...state[id] };
-            const updatedCoord = [ actor.coord[0] + offset[0], actor.coord[1] + offset[1] ];
-            const updatedActor = { ...actor, coord: updatedCoord };
-            
-            return { ...state, [id]: updatedActor };
+
+            return state.updateIn([id, 'coord'], (coord) => (
+                [ coord[0] + offset[0], coord[1] + offset[1] ]
+            ));
 
         default:
             return state;
