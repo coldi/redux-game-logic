@@ -1,5 +1,11 @@
-import { WORLD_ACTOR_MOVE } from '../constants';
-import { isCoordWalkable, getActorById } from '../'
+import { isCoordWalkable, getActorById } from '../';
+import actorActionPoints from './actorActionPoints';
+
+import {
+    WORLD_ACTOR_MOVE,
+    MOVEMENT_COST
+} from '../constants';
+
 
 const actorMove = (
     id = '',
@@ -13,14 +19,17 @@ const actorMove = (
     const isWalkable = isCoordWalkable(state, coord);
 
     if (isWalkable) {
+
         dispatch({
             type: WORLD_ACTOR_MOVE,
-            payload: {
-                id,
-                offset
-            }
+            payload: { id, offset }
         });
+
+        dispatch(actorActionPoints(id, actorMove.COST));
+
     }
 };
+
+actorMove.COST = MOVEMENT_COST;
 
 export default actorMove;

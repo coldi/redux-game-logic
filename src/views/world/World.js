@@ -6,6 +6,7 @@ import TWEEN from 'tween.js';
 import { debounce } from 'lodash';
 
 import Grid from './Grid';
+import { getWorldState } from '../../modules/world';
 import windowResize from '../../modules/world/actions/windowResize';
 import actorMove from '../../modules/world/actions/actorMove';
 
@@ -142,7 +143,7 @@ export class World extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    const { map, actors, scene } = state;
+    const { map, actors, scene } = getWorldState(state);
     return { map, actors, scene }
 };
 

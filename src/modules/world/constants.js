@@ -1,2 +1,12 @@
+// game logic constants
+export const MOVEMENT_COST = 1;
+
+// action type constants
+export const WORLD_ACTOR_CREATE = 'WORLD_ACTOR_CREATE';
+export const WORLD_ACTOR_ACTION = 'WORLD_ACTOR_ACTION';
+export const WORLD_AUTONOMIC_ACTOR_ACTION = 'WORLD_AUTONOMIC_ACTOR_ACTION';
+export const WORLD_ACTOR_ACTIONPOINTS = 'WORLD_ACTOR_ACTIONPOINTS';
 export const WORLD_ACTOR_MOVE = 'WORLD_ACTOR_MOVE';
+export const WORLD_PLAYER_LOW_AP = 'WORLD_PLAYER_LOW_AP';
+
 export const WINDOW_RESIZE = 'WINDOW_RESIZE';
