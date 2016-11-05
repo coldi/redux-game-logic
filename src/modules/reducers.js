@@ -1,9 +1,11 @@
 import world from './world';
 import cycle from './cycle';
+import eventlog from './eventlog';
 
 const reducers = {
     world,
-    ...cycle
+    ...cycle,
+    ...eventlog
 };
 
 export default reducers;

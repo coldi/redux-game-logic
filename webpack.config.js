@@ -93,6 +93,7 @@ export default (DEV_MODE) => ({
     ]),
 
     resolve: {
+        root: [path.join(__dirname, 'src')],
         modulesDirectories: ['./node_modules/'],
         extensions: ['', '.js', '.jsx']
     }

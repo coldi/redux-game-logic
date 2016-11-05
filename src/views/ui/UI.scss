@@ -5,17 +5,45 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 240px;
+  width: 100%;
+  height: 100vh;
   box-sizing: border-box;
   color: #fff;
   z-index: 1;
 }
 
-.Stats {
-  padding: $gap;
-}
-
 .Controls {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 120px;
   padding: $gap;
   text-align: center;
+}
+
+.Stats {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  text-align: right;
+  padding: $gap;
+
+  ul { list-style: none }
+}
+
+.Log {
+  position: absolute;
+  right: 0;
+  top: 0;
+  text-align: right;
+  padding: $gap;
+  max-height: 300px;
+  width: 400px;
+  overflow-y: auto;
+
+  > * + * {
+    border-top: 1px rgba(255, 255, 255, .2) solid;
+    padding-top: .5em;
+    margin-top: .5em;
+  }
 }

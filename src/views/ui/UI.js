@@ -3,10 +3,11 @@ import styles from "./UI.scss";
 import React, { PropTypes } from "react";
 import { connect } from "react-redux";
 
-import phaseProceed from '../../modules/cycle/actions/phaseProceed';
-import actorAction from '../../modules/world/actions/actorAction';
-import actorMove from '../../modules/world/actions/actorMove';
-import { getActorById } from '../../modules/world';
+import phaseProceed from 'modules/cycle/actions/phaseProceed';
+import actorAction from 'modules/world/actions/actorAction';
+import actorMove from 'modules/world/actions/actorMove';
+import { getActorById } from 'modules/world';
+import { getLogs } from 'modules/eventlog';
 
 
 export class UI extends React.Component {
@@ -16,6 +17,11 @@ export class UI extends React.Component {
     static defaultProps = {};
 
     state = {};
+    log;
+
+    componentDidUpdate () {
+        this.log.scrollTop = this.log.scrollHeight;
+    }
 
     render () {
 
@@ -41,6 +47,9 @@ export class UI extends React.Component {
                     </ul>
                     <button onClick={props.onPhaseProceed}>Next turn</button>
                 </div>
+                <div className={styles.Log} ref={(ref) => this.log = ref }>
+                    {props.logs.map((log, index) => <div key={index}>{log}</div>)}
+                </div>
             </div>
         )
     }
@@ -50,6 +59,7 @@ export class UI extends React.Component {
 const mapStateToProps = (state) => {
     return {
         cycle: state.cycle,
+        logs: getLogs(state),
         player: getActorById(state, 'player')
     }
 };
