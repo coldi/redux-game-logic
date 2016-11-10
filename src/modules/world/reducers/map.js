@@ -3,9 +3,9 @@ import Immutable from 'seamless-immutable';
 const map = (
 
     state = Immutable([
-        [1, 1, 0, 1, 1, 1],
-        [0, 1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 0, 1],
+        [1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1],
+        [1, 0, 1, 1, 0, 1],
         [1, 1, 1, 1, 1, 1],
     ]),
     action = {}

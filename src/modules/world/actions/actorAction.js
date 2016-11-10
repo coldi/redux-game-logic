@@ -3,11 +3,18 @@ import { hasActorEnoughAP } from '../'
 
 import { WORLD_PLAYER_LOW_AP } from '../constants';
 
-
+/**
+ * This action creator is used to handle other actor related actions.
+ * It checks if the actor is allowed to perform an action and if he has enough action points.
+ *
+ * @param id An actor id
+ * @param action Another actor related action creator
+ * @param actionArgs Arguments for the passed action creator
+ */
 const actorAction = (
-    id = '', // actor id
-    action, // action creator
-    ...actionArgs // arguments for action creator
+    id = '',
+    action,
+    ...actionArgs
 ) => (dispatch, getState) => {
 
     if (action instanceof Function) {
@@ -18,18 +25,14 @@ const actorAction = (
 
             const cost =  action.COST || 0;
 
-            if (cost) {
+            if (hasActorEnoughAP(state, id, cost)) {
 
-                if (hasActorEnoughAP(state, id, cost)) {
+                dispatch(action(id, ...actionArgs));
 
-                    dispatch(action(id, ...actionArgs));
+            } else {
 
-                } else {
-
-                    if (id === 'player') {
-                        dispatch({ type: WORLD_PLAYER_LOW_AP });
-                    }
-
+                if (id === 'player') {
+                    dispatch({ type: WORLD_PLAYER_LOW_AP });
                 }
 
             }

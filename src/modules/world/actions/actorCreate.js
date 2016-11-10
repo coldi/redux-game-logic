@@ -1,5 +1,11 @@
 import { WORLD_ACTOR_CREATE } from '../constants';
 
+/**
+ * Creates an actor.
+ *
+ * @param id An unique id
+ * @param props Specific actor props
+ */
 const actorCreate = (
     id = '',
     props = {}

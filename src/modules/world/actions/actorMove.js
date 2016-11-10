@@ -6,7 +6,12 @@ import {
     MOVEMENT_COST
 } from '../constants';
 
-
+/**
+ * Moves an actor by a given offset.
+ *
+ * @param id An actor id
+ * @param offset The offset the actor should move, e.g. [0, -1]
+ */
 const actorMove = (
     id = '',
     offset = [0, 0]

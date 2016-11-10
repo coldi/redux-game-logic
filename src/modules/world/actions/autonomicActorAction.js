@@ -4,7 +4,13 @@ import actorMove from './actorMove';
 import phaseProceed from '../../cycle/actions/phaseProceed';
 import { WORLD_AUTONOMIC_ACTOR_ACTION } from '../constants';
 
-
+/**
+ * This is an action wrapper that is used by non-player actors.
+ * It dispatches itself as long as the actor has enough action points.
+ * Then it dispatches an action to end it's turn phase.
+ *
+ * @param id An actor id
+ */
 const autonomicActorAction = (
     id = '', // actor id
 ) => (dispatch, getState) => {

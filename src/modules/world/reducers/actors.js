@@ -13,83 +13,80 @@ import {
 } from '../constants';
 
 
-// TODO: later: rename actors to characters
+// TODO: later: rename actors to characters?
 // TODO: remember: characters are part of a group!
 const actors = (
 
-    state = Immutable({
-        // id: actor{}
-    }),
+    state = Immutable({}),
     action = {}
 
 ) => {
 
-    // TODO: later: always use action.payload to store action params
+    switch (action.type) {
 
-    const { type } = action;
+        case WORLD_ACTOR_CREATE: {
+
+            const { actor } = action.payload;
+
+            return state.set(actor.id, actor);
+
+        }
 
 
+        case WORLD_ACTOR_MOVE: {
 
-    if (type === WORLD_ACTOR_CREATE) {
+            const { id, offset } = action.payload;
 
-        const { actor } = action.payload;
+            return state.updateIn([id, 'coord'], (coord) => (
+                [coord[0] + offset[0], coord[1] + offset[1]]
+            ));
 
-        return state.set(actor.id, actor);
+        }
+
+
+        case WORLD_ACTOR_ACTIONPOINTS: {
+
+            const { id, cost } = action.payload;
+
+            return state.updateIn([id, 'actionPoints'], (ap) => (
+                Math.max(0, ap - cost)
+            ));
+
+        }
+
+
+        // TODO: decouple world module from cycle module
+        case CYCLE_PHASE_PROCEED: {
+
+            const { actorId } = action.payload;
+
+            return state.setIn([actorId, 'isDone'], true);
+
+        }
+
+
+        // TODO: decouple world module from cycle module
+        case CYCLE_TURN_NEXT: {
+
+            let stateUpdate = {};
+            Object.keys(state).forEach((id) => {
+                let actor = state[id];
+                stateUpdate[id] = {
+                    actionPoints: actor.actionPointsMax,
+                    isDone: false
+                };
+            });
+
+            return state.merge(stateUpdate, {deep: true});
+
+        }
+
+
+        default:
+
+            return state;
+
     }
-
-
-
-    if (type === WORLD_ACTOR_MOVE) {
-
-        const { id, offset } = action.payload;
-
-        return state.updateIn([id, 'coord'], (coord) => (
-            [coord[0] + offset[0], coord[1] + offset[1]]
-        ));
-    }
-
-
-
-    if (type === WORLD_ACTOR_ACTIONPOINTS) {
-
-        const { id, cost } = action.payload;
-
-        return state.updateIn([id, 'actionPoints'], (ap) => (
-            Math.max(0, ap - cost)
-        ));
-    }
-
-
-
-    // TODO: decouple world module from cycle module
-    if (type === CYCLE_PHASE_PROCEED) {
-
-        const { actorId } = action.payload;
-
-        return state.setIn([actorId, 'isDone'], true);
-
-    }
-
-
-
-    // TODO: decouple world module from cycle module
-    if (type === CYCLE_TURN_NEXT) {
-
-        let stateUpdate = {};
-        Object.keys(state).forEach((id) => {
-            let actor = state[id];
-            stateUpdate[id] = {
-                actionPoints: actor.actionPointsMax,
-                isDone: false
-            };
-        });
-
-        return state.merge(stateUpdate, {deep: true});
-
-    }
-
-
-    return state;
 
 };
 

@@ -2,7 +2,9 @@ import { getCurrentTurn } from '../';
 
 import { CYCLE_TURN_NEXT } from '../constants';
 
-
+/**
+ * Simply increases the turn count and dispatches next turn action.
+ */
 const turnNext = () => (dispatch, getState) => {
 
     const state = getState();

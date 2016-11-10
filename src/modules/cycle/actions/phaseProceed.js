@@ -2,7 +2,12 @@ import { getPhaseDoneState } from '../'
 import phaseNext from './phaseNext'
 import { CYCLE_PHASE_PROCEED } from '../constants';
 
-// ACTOR_DONE ?
+/**
+ * This actions gets dispatched when an actor ends his turn phase.
+ * If all participants of the current phase are done the next phase is dispatched.
+ *
+ * @param actorId An actor id
+ */
 const phaseProceed = (
     actorId = ''
 ) => (dispatch, getState) => {
@@ -15,7 +20,7 @@ const phaseProceed = (
     const state = getState();
 
     if (getPhaseDoneState(state)) {
-        // PHASE_NEXT
+        // all done, start next phase
         dispatch(phaseNext());
     }
 

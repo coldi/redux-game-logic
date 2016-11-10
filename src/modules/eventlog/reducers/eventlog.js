@@ -20,49 +20,42 @@ const eventlog = (
 
 ) => {
 
-    const { type } = action;
+    switch (action.type) {
+
+        case CYCLE_PHASE_START:
+
+            const { phaseIndex } = action.payload;
+
+            const phaseName = (phaseIndex === 0)
+                ? 'Player Phase'
+                : 'Compute Phase';
+
+            return addLog(state,
+                `The ${phaseName} begins ...`
+            );
 
 
+        case CYCLE_TURN_NEXT:
 
-    if (type === CYCLE_PHASE_START) {
+            const { turn } = action.payload;
 
-        const { phaseIndex } = action.payload;
-
-        const phaseName = (phaseIndex === 0)
-            ? 'Player Phase'
-            : 'Compute Phase';
-
-        return addLog(state,
-            `The ${phaseName} begins ...`
-        );
-
-    }
+            return addLog(state,
+                `Next turn (${turn})`
+            );
 
 
+        case WORLD_PLAYER_LOW_AP:
 
-    if (type === CYCLE_TURN_NEXT) {
-
-        const { turn } = action.payload;
-
-        return addLog(state,
-            `Next turn (${turn})`
-        );
-
-    }
+            return addLog(state,
+                `You are low on ActionPoints. Go for next turn!`
+            );
 
 
+        default:
 
-    if (type === WORLD_PLAYER_LOW_AP) {
-
-        return addLog(state,
-            `You are low on ActionPoints. Go for next turn!`
-        );
+            return state;
 
     }
-
-
-
-    return state;
 
 };
 

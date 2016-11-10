@@ -24,65 +24,41 @@ const cycle = (
 
 ) => {
 
-    const { type } = action;
+    switch (action.type) {
+
+        case WORLD_ACTOR_CREATE:
+
+            const { actor } = action.payload;
+
+            const phaseIndex =
+                (actor.id === 'player') ? 0 : 1;
+
+            const phase = state.phases[phaseIndex].concat([{
+                actorId: actor.id
+            }]);
+
+            return state.setIn(['phases', phaseIndex], phase);
 
 
+        case CYCLE_PHASE_NEXT:
 
-    if (type === WORLD_ACTOR_CREATE) {
-
-        const { actor } = action.payload;
-
-        const phaseIndex =
-            (actor.id === 'player') ? 0 : 1;
-
-        const phase = state.phases[phaseIndex].concat([{
-            actorId: actor.id
-        }]);
-
-        return state.setIn(['phases', phaseIndex], phase);
-    }
+            return state.set('phaseIndex', state.phaseIndex + 1);
 
 
+        case CYCLE_TURN_NEXT:
+            // increase turn counter
+            // reset phase index
+            return state.merge({
+                turn: state.turn + 1,
+                phaseIndex: 0,
+            });
 
-    if (type === CYCLE_PHASE_PROCEED) {
+        
+        default:
 
-        return state;
-
-    }
-
-
-
-    if (type === CYCLE_PHASE_NEXT) {
-
-        return state.set('phaseIndex', state.phaseIndex + 1);
-
-    }
-
-
-
-    if (type === CYCLE_PHASE_START) {
-
-        return state;
+            return state;
 
     }
-
-
-
-    if (type === CYCLE_TURN_NEXT) {
-
-
-        // increase turn counter
-        // reset phase index
-        return state.merge({
-            turn: state.turn + 1,
-            phaseIndex: 0,
-        });
-
-    }
-
-
-
-    return state;
 
 };
 
